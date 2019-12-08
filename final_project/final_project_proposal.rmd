@@ -1,0 +1,96 @@
+---
+title: "DATA608 Final Project Proposal"
+author: "Santosh Manjrekar"
+date: "11/15/2019"
+output:
+    html_document:
+        theme: cerulean
+        df_print: paged
+        toc: true
+        toc_float:
+            collapsed: false
+            smooth_scroll: false
+        css: ./report.css
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+library(kableExtra)
+```
+
+## Data 608 - CDC Youth Risk Behavior Surveillance System (YRBSS)
+
+```{r eval = TRUE}
+# This proposal must include: 
+# a link to the data source
+```
+
+The data I will be using for my final project is from the CDC's Youth Risk Behavior Surveillance System (YRBSS) found at following location:
+
+[www.cdc.gov/healthyyouth/data/yrbs/index.htm](www.cdc.gov/healthyyouth/data/yrbs/index.htm) 
+
+The data on the CDC website is available only in ASCII and Microsoft Access formats though.The same YRBSS data already converted to csv format on the [Kaggle](https://www.kaggle.com) website at following location:
+
+[https://www.kaggle.com/raylo168/dash-yrbss-hs-2017](https://www.kaggle.com/raylo168/dash-yrbss-hs-2017)
+
+For simplicity I will use the Kaggle dataset.
+
+There are 5 files that total about 2 GB of data.
+
+1. Alcohol and Other Drug Use.csv
+2. Dietary Behaviors.csv
+3. Obesity Overweight and Weight Control.csv
+4. Physical Activity.csv
+5. Sexual Behaviors.csv
+6. Tobacco Use.csv
+
+Each file contains data at the National, State, Territory, Local, and 'Other' regional levels for the years 1991 through 2017 (odd years only) in one file.  Each question is separated into a higher risk and lower risk category with the aggregated percentage of respondents in each cateogory in separate columns.  Variables for race, gender, and geolocation are also included.  
+
+### "Alcohol and Other Drug Use" Variable Names
+
+```{r}
+raw.dat <- read.csv(file = "./data/Alcohol and Other Drug Use.csv", header = TRUE)
+#head(raw.dat)
+complete <- raw.dat[complete.cases(raw.dat$Greater_Risk_Data_Value),]
+names(complete)
+```
+
+### Sample of "Alcohol and Other Drug Use" data
+
+```{r}
+
+names(complete)[1] <- "YEAR"
+head(complete[c('YEAR','LocationDesc','Greater_Risk_Question','Greater_Risk_Data_Value','Lesser_Risk_Question','Lesser_Risk_Data_Value','StratificationType')], 10)
+
+```
+
+## Project Description
+
+```{r}
+# an explanation of what you want to show
+```
+
+I intend to include data from all 5 csv files (if possible) and create an interactive graphic that allows the user to choose the risk behaviors of their interest and compare them across different regional areas vs the national numbers as well as see changes over time.  So I imagine line graphs showing how a behavior has changed from 1991 to 2017 and possibly allowing the user to select multiple behaviors or multiple geographic regions to plot on the same graph for comparison.  Each of those selection options could be allowed in separate graphs or on separate tabs.  I may have separate tabs for state data vs. local data, or may keep them all together so that state and local data can be compared to each other as well. I'd like to include filters for race and gender as well and possibly create a map using the geolocation data available.
+
+## Relevance
+
+```{r}
+# why this is relevant to a current policy, business, or justice issue
+```
+
+The Youth Risk Behavior Surveillance System is the only study of it's kind that "monitors six categories of health-related behaviors that contribute to the leading causes of death and disability among youth and adults"[^1] over the past 16 years.  Understanding 1. which of these behaviors youth are engaged in 2. how often or to what extent they engage in them and 3. how those behaviors are changing over time can lead to the development of better preventative programs and health education.  
+
+## Technologies
+
+```{r}
+# which technologies you plan to use
+```
+
+I'd like to create a shiny app using plotly for the graphics but may have to scale back my data if I choose to go that route since they have a 1 GB limit for the free accounts.  Possibly a way around is to use ggplot library for graphs. 
+
+Another thought is to do a static Rmd file which can be posted to RPubs with a static graphic for each csv file and a link to a separate shiny app for each file for interactive exploration as well.  This may be a work-around solution that would allow for incorporating all the data into one document.
+
+
+## References
+
+[^1]: "Youth Risk Behavior Surveillance System (YRBSS)" Centers for Disease Control and Prevention, August 22, 2018, www.cdc.gov/healthyyouth/data/yrbs/index.htm.

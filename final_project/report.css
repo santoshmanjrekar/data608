@@ -1,0 +1,46 @@
+body {background-color: #ffffff;}
+
+p { font-family: "Trebuchet MS", "Gill Sans", Helvetica, sans-serif;
+    font-size: 14px;
+    padding-left: 10px;}
+	
+img { padding: 15px 25px 15px 25px;}
+
+a:link {	color: #0086b3;}
+a:visited {	color: #e29900;}
+a:hover {	color: #ffbf00;}
+a:active {	color: #ffbf00;}
+
+hr {border: 1px solid #d9d9d9;}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Trebuchet MS", "Gill Sans", Helvetica, sans-serif;
+	padding: 5px 10px 5px 10px;}
+
+h1, h2, h3 {color: #0086b3;
+			font-weight: bold;}
+	
+h4, h5, h6 {color: #24748f;
+			font-weight: medium;}
+	
+h1 {font-size: 26px;
+	background: #c2e4f0;}
+h2 {font-size: 24px;
+	background: #d6edf5;}
+h3 {font-size: 20px;
+	background: #eaf6fa;}
+h4 {font-size: 18px;}
+h5 {font-size: 16px;}
+h6 {font-size: 14px;}
+
+.midcenter {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}
+
+.footer {
+    color: black; background: #E8E8E8;
+    position: fixed; top: 90%;
+    text-align:center; width:100%;
+}
