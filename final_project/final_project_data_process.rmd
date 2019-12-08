@@ -1,0 +1,158 @@
+---
+title: "CUNY SPS DATA608 Final Project Data Preperation"
+author: "Santosh Manjrekar"
+date: "11/15/2019"
+output:
+    html_document:
+        theme: cerulean
+        df_print: paged
+        toc: true
+        toc_float:
+            collapsed: false
+            smooth_scroll: false
+        css: ./reports.css
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+library(kableExtra)
+library(data.table)
+```
+
+# Data - CDC Youth Risk Behavior Surveillance System (YRBSS)
+
+[https://www.kaggle.com/raylo168/dash-yrbss-hs-2017](https://www.kaggle.com/raylo168/dash-yrbss-hs-2017)
+
+There are 6 files that total about 2 GB of data.
+
+1. Alcohol and Other Drug Use.csv
+2. Dietary Behaviors.csv
+3. Obesity Overweight and Weight Control.csv
+4. Physical Activity.csv
+5. Sexual Behaviors.csv
+6. Tobacco Use.csv
+
+Each file contains data at the National, State, Territory, Local, and 'Other' regional levels for the years 1991 through 2017 (odd years only) in one file.  Each question is separated into a higher risk and lower risk category with the aggregated percentage of respondents in each cateogory in separate columns.  Variables for race, gender, and geolocation are also included.  
+
+## "Alcohol and Other Drug Use" 
+
+### Variable Names
+
+```{r eval = FALSE}
+raw.dat <- read.csv(file = "./data/Alcohol and Other Drug Use.csv", header = TRUE)
+#head(raw.dat)
+#complete <- raw.dat[complete.cases(raw.dat$Greater_Risk_Data_Value),]
+```
+
+
+
+```{r eval = FALSE}
+names(raw.dat)[1] <- "YEAR"
+names(raw.dat)
+```
+
+### For our study we will keep following columns from "Alcohol and Other Drug Use" data
+
+```{r}
+#Columns we want to keep...
+#  [1] "YEAR"                                   
+#  [2] "LocationAbbr"                           
+#  [3] "LocationDesc"    
+#  [5] "Topic"                                  
+#  [6] "Subtopic" 
+#  [7] "ShortQuestionText"                      
+#  [8] "Greater_Risk_Question"                  
+#  [9] "Description"                            
+# [12] "Greater_Risk_Data_Value"                
+# [17] "Lesser_Risk_Question"                   
+# [18] "Lesser_Risk_Data_Value"                     
+# [24] "Sex"                                    
+# [25] "Race"                                   
+# [26] "Grade"                                  
+# [27] "GeoLocation"                                                
+# [35] "StratificationType"  
+columns <- c('YEAR','LocationAbbr','LocationDesc','Topic','Subtopic',
+             'ShortQuestionText','Greater_Risk_Question','Description',
+             'Greater_Risk_Data_Value','Lesser_Risk_Question',
+             'Lesser_Risk_Data_Value','Sex','Race','Grade','GeoLocation',
+             'StratificationType')
+```
+
+### Read in only the columns we need and subset only rows with Grade totals...
+
+```{r}
+AlcoholDrugs <- fread("./data/Alcohol and Other Drug Use.csv", select = columns)
+AlcoholDrugs <- AlcoholDrugs[Grade=="Total", ]
+names(AlcoholDrugs)
+head(AlcoholDrugs)
+```
+
+```{r}
+head(AlcoholDrugs[is.na(Greater_Risk_Data_Value),][,c(7,9)])
+```
+
+```{r}
+head(AlcoholDrugs[!is.na(Greater_Risk_Data_Value),][,c(7,9)])
+```
+
+### Write to new CSV file
+
+```{r}
+write.csv(AlcoholDrugs[!is.na(Greater_Risk_Data_Value),], 
+          file = "./data/AlcoholDrugs.csv", row.names=FALSE, na="")
+```
+
+## Repeat the process for the other 5 files...
+
+### Sexual Behaviors
+
+```{r}
+Sex <- fread("./data/Sexual Behaviors.csv", select = columns)
+Sex <- Sex[Grade=="Total", ]
+write.csv(Sex[!is.na(Greater_Risk_Data_Value),], 
+          file = "./data/Sex.csv", row.names=FALSE, na="")
+```
+
+
+### Physical Activity
+
+```{r}
+column_nums <- c(1,2,3,5,6,7,8,9,12,17,18,24,25,26,27,35)
+Activity <- fread("./data/Physical Activity.csv", 
+                  select = column_nums, col.names = columns)
+Activity <- Activity[Grade=="Total", ]
+write.csv(Activity[!is.na(Greater_Risk_Data_Value),], 
+          file = "./data/Activity.csv", row.names=FALSE, na="")
+```
+
+
+### Obesity Overweight and Weight Control
+
+```{r}
+Obesity <- fread("./data/Obesity Overweight and Weight Control.csv", 
+                 select = column_nums, col.names = columns)
+Obesity <- Obesity[Grade=="Total", ]
+write.csv(Obesity[!is.na(Greater_Risk_Data_Value),], 
+          file = "./data/Obesity.csv", row.names=FALSE, na="")
+```
+
+
+### Dietary Behaviors
+
+```{r}
+Diet <- fread("./data/Dietary Behaviors.csv", 
+              select = column_nums, col.names = columns)
+Diet <- Diet[Grade=="Total", ]
+write.csv(Diet[!is.na(Greater_Risk_Data_Value),], 
+          file = "./data/Diet.csv", row.names=FALSE, na="")
+```
+
+
+### Tobacco Use
+
+```{r}
+Tobacco <- fread("./data/Tobacco Use.csv", select = columns)
+Tobacco <- Tobacco[Grade=="Total", ]
+write.csv(Tobacco[!is.na(Greater_Risk_Data_Value),], 
+          file = "./data/Tobacco.csv", row.names=FALSE, na="")
+```
